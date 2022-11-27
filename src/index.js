@@ -1,6 +1,6 @@
 import './css/styles.css';
 import { Notiflix } from 'notiflix';
-import { debonce } from 'lodash.debounce';
+import debounce from 'lodash.debounce';
 import { fetchCountries } from './fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
@@ -11,39 +11,39 @@ const refs = {
   countryInfo: document.querySelector('.country-info'),
 };
 
-refs.inputEl.addEventListener('input', debonce(onInputValue, DEBOUNCE_DELAY));
+refs.inputEl.addEventListener('input', debounce(onInputValue, DEBOUNCE_DELAY));
 
 function onInputValue() {
   const name = refs.inputEl.value.trim();
   if (name === '') {
     return (refs.countryList.innerHTML = ''), (refs.countryInfo.innerHTML = '');
   }
-}
 
-fetchCountries(name)
-  .then(response => {
-    refs.countryList.innerHTML = '';
-    refs.countryInfo.innerHTML = '';
-    if (response.length > 10) {
-      Notiflix.Notify.info(
-        'Too many matches found. Please enter a more specific name.'
-      );
-    } else if (response.length < 10 && response.length >= 2) {
-      refs.countryList.insertAdjacentHTML(
-        'beforeend',
-        renderCountryList(response)
-      );
-    } else {
-      refs.countryInfo.insertAdjacentHTML(
-        'beforeend',
-        renderCountryInfo(response)
-      );
-    }
-  })
-  .catch(() => {
-    Notiflix.Notify.failure('Oops, there is no country with that name');
-    return [];
-  });
+  fetchCountries(name)
+    .then(response => {
+      refs.countryList.innerHTML = '';
+      refs.countryInfo.innerHTML = '';
+      if (response.length > 10) {
+        Notiflix.Notify.info(
+          'Too many matches found. Please enter a more specific name.'
+        );
+      } else if (response.length < 10 && response.length >= 2) {
+        refs.countryList.insertAdjacentHTML(
+          'beforeend',
+          renderCountryList(response)
+        );
+      } else {
+        refs.countryInfo.insertAdjacentHTML(
+          'beforeend',
+          renderCountryInfo(response)
+        );
+      }
+    })
+    .catch(() => {
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+      return [];
+    });
+}
 
 function renderCountryList(countries) {
   return countries
