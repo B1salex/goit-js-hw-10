@@ -8,3 +8,5 @@ export function fetchCountries(name) {
     return response.json();
   });
 }
+
+// https://restcountries.com/v3.1/name/{name}
